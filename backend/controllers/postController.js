@@ -1,6 +1,19 @@
 import User from "../models/userModel.js";
 import Post from "../models/postModel.js";
 
+const getPost = async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) {
+      return res.status(400).json({ message: "Post not found!" });
+    }
+    res.status(200).json({ message: "Post found!", post });
+  } catch (error) {
+    res.status(300).json({ message: error.message });
+    console.log(error);
+  }
+};
+
 const createPost = async (req, res) => {
   try {
     const { postedBy, text, img } = req.body;
@@ -34,4 +47,4 @@ const createPost = async (req, res) => {
   }
 };
 
-export { createPost };
+export { createPost, getPost };
