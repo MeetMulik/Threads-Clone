@@ -3,6 +3,7 @@ import {
   createPost,
   deletePost,
   getPost,
+  likeUnlikePost,
 } from "../controllers/postController.js";
 import protectRoute from "../middlewares/protectRoute.js";
 
