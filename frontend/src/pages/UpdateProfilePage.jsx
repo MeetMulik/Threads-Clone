@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Button,
   Flex,
@@ -18,20 +16,20 @@ import userAtom from "../atoms/userAtom";
 import usePreviewImg from "../hooks/usePreviewImg";
 import useShowToast from "../hooks/useShowToast";
 
-export default function UserProfilePage() {
+export default function UpdateProfilePage() {
   const [user, setUser] = useRecoilState(userAtom);
-  const showToast = useShowToast();
-  const [updating, setUpdating] = useState(false);
-
   const [inputs, setInputs] = useState({
     name: user.name,
     username: user.username,
     email: user.email,
-    password: "",
     bio: user.bio,
+    password: "",
   });
-
   const fileRef = useRef(null);
+  const [updating, setUpdating] = useState(false);
+
+  const showToast = useShowToast();
+
   const { handleImageChange, imgUrl } = usePreviewImg();
 
   const handleSubmit = async (e) => {
@@ -46,11 +44,12 @@ export default function UserProfilePage() {
         },
         body: JSON.stringify({ ...inputs, profilePic: imgUrl }),
       });
-      const data = await res.json();
+      const data = await res.json(); // updated user object
       if (data.error) {
         showToast("Error", data.error, "error");
+        return;
       }
-      showToast("Success", "Profile Updated!", "success");
+      showToast("Success", "Profile updated successfully", "success");
       setUser(data);
       localStorage.setItem("user-threads", JSON.stringify(data));
     } catch (error) {
@@ -59,10 +58,9 @@ export default function UserProfilePage() {
       setUpdating(false);
     }
   };
-
   return (
     <form onSubmit={handleSubmit}>
-      <Flex minH={"100vh"} align={"center"} justify={"center"}>
+      <Flex align={"center"} justify={"center"} my={6}>
         <Stack
           spacing={4}
           w={"full"}
@@ -79,8 +77,8 @@ export default function UserProfilePage() {
             <Stack direction={["column", "row"]} spacing={6}>
               <Center>
                 <Avatar
-                  boxShadow={"md"}
                   size="xl"
+                  boxShadow={"md"}
                   src={imgUrl || user.profilePic}
                 />
               </Center>
@@ -100,17 +98,17 @@ export default function UserProfilePage() {
           <FormControl>
             <FormLabel>Full name</FormLabel>
             <Input
-              placeholder="Your Name"
+              placeholder="John Doe"
               value={inputs.name}
-              _placeholder={{ color: "gray.500" }}
               onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+              _placeholder={{ color: "gray.500" }}
               type="text"
             />
           </FormControl>
           <FormControl>
             <FormLabel>User name</FormLabel>
             <Input
-              placeholder="UserName"
+              placeholder="johndoe"
               value={inputs.username}
               onChange={(e) =>
                 setInputs({ ...inputs, username: e.target.value })
@@ -123,19 +121,19 @@ export default function UserProfilePage() {
             <FormLabel>Email address</FormLabel>
             <Input
               placeholder="your-email@example.com"
-              _placeholder={{ color: "gray.500" }}
-              onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
-              type="email"
               value={inputs.email}
+              onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
+              _placeholder={{ color: "gray.500" }}
+              type="email"
             />
           </FormControl>
           <FormControl>
             <FormLabel>Bio</FormLabel>
             <Input
-              placeholder="Your Bio.."
+              placeholder="Your bio."
               value={inputs.bio}
-              _placeholder={{ color: "gray.500" }}
               onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
+              _placeholder={{ color: "gray.500" }}
               type="text"
             />
           </FormControl>
@@ -143,11 +141,11 @@ export default function UserProfilePage() {
             <FormLabel>Password</FormLabel>
             <Input
               placeholder="password"
-              _placeholder={{ color: "gray.500" }}
               value={inputs.password}
               onChange={(e) =>
                 setInputs({ ...inputs, password: e.target.value })
               }
+              _placeholder={{ color: "gray.500" }}
               type="password"
             />
           </FormControl>
@@ -164,13 +162,13 @@ export default function UserProfilePage() {
             </Button>
             <Button
               bg={"green.400"}
-              type="submit"
               color={"white"}
-              isLoading={updating}
               w="full"
               _hover={{
                 bg: "green.500",
               }}
+              type="submit"
+              isLoading={updating}
             >
               Submit
             </Button>
