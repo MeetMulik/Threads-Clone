@@ -2,13 +2,20 @@ import {
   Avatar,
   AvatarBadge,
   Flex,
+  Image,
   Stack,
   Text,
   WrapItem,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { BsCheck2All } from "react-icons/bs";
+import { useRecoilValue } from "recoil";
+import userAtom from "../atoms/userAtom";
 
-const Conversation = () => {
+const Conversation = ({ conversation }) => {
+  const user = conversation.participants[0];
+  const lastMessage = conversation.lastMessage;
+  const currentUser = useRecoilValue(userAtom);
   return (
     <Flex
       gap={4}
@@ -22,19 +29,23 @@ const Conversation = () => {
       borderRadius={"md"}
     >
       <WrapItem>
-        <Avatar
-          size={{ base: "xs", sm: "sm", md: "md" }}
-          src="https://yt3.googleusercontent.com/-CFTJHU7fEWb7BYEb6Jh9gm1EpetvVGQqtof0Rbh-VQRIznYYKJxCaqv_9HeBcmJmIsp2vOO9JU=s900-c-k-c0x00ffffff-no-rj"
-        >
+        <Avatar size={{ base: "xs", sm: "sm", md: "md" }} src={user.profilePic}>
           <AvatarBadge boxSize={"1em"} bg={"green.500"} />
         </Avatar>
       </WrapItem>
       <Stack direction={"column"} fontSize={"sm"}>
         <Text fontWeight={700} display={"flex"} alignItems={"center"}>
-          John Doe
+          {user.username} <Image src="/verified.png" w={4} h={4} ml={1} />
         </Text>
         <Text fontSize={"xs"} display={"flex"} alignItems={"center"} gap={1}>
-          Hello some message...
+          {currentUser._id === lastMessage.sender ? (
+            <BsCheck2All size={16} />
+          ) : (
+            ""
+          )}
+          {lastMessage.text.length > 18
+            ? lastMessage.text.substring(0, 18) + "..."
+            : lastMessage.text}
         </Text>
       </Stack>
     </Flex>
