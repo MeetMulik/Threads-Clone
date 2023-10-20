@@ -54,7 +54,7 @@ const ChatPage = () => {
               </Button>
             </Flex>
           </form>
-          {true &&
+          {false &&
             [0, 1, 2, 3, 4].map((_, i) => (
               <Flex
                 key={i}
